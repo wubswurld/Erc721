@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import MusicToken from "./contracts/MusicToken.json";
+import CheckMetamask from "./Components/CheckMetamask.js";
 import getWeb3 from "./utils/getWeb3";
 
 import "./App.css";
@@ -14,12 +16,12 @@ class App extends Component {
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-
+      console.log(accounts);
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = MusicToken.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        MusicToken.abi,
         deployedNetwork && deployedNetwork.address,
       );
 
@@ -38,33 +40,24 @@ class App extends Component {
   runExample = async () => {
     const { accounts, contract } = this.state;
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
   };
-
   render() {
     if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return <div><CheckMetamask></CheckMetamask></div>;
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <h1>Ethereum music</h1>
+        <h3>Account address</h3>
+        <h4>{this.state.accounts}</h4>
+        <p>Your Music</p>
+        <div>{this.state.storageValue}</div>
+        <div>
+        <h3>Add your latest song!</h3>
+        <input id="xvalue" type="text"></input> 
+        <input id="Button1" type="button" onclick="" value="Add to Blockchain"></input>
+        </div>
       </div>
     );
   }
